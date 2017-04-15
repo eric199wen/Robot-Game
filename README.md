@@ -1,5 +1,5 @@
 # Robot-Game
-It's a simple robot game. You can move a robot on a 8x8 board or find all the actions for a robot to go from original location to a designated destination within an assigned maximum actions allowed.
+It's a simple robot game. You can move a robot on a 8x8 board or find all the actions for a robot to move from original location to a designated destination within an assigned maximum actions allowed.
 
 ## Compile and run
 `make clean` will delete all .class files.<br />
@@ -7,8 +7,11 @@ It's a simple robot game. You can move a robot on a 8x8 board or find all the ac
 `make run` will run the robot game.<br />
 
 ## Version 1
-In this version, you can place a robot on a 8x8 board in the Cartesian coordinate system and tell it how you want it to move within the board. <br /><br />
-An action that a robot can play including move(M), turn left(L) and turn right(R).<br /><br />
+In this version, you can place a robot on a 8x8 board in the Cartesian coordinate system and tell it how you want it to move within the board. If a move led the robot to go out of the board boundary, that move will simply be skipped <br /><br />
+An action that a robot can play includes
+- M: move a step forward
+- L: turn left
+- R: turn right
 
 ### Input
 - Location: [x,y] (0 < x,y < 9) (ex: [2,3])<br />
@@ -21,7 +24,8 @@ An action that a robot can play including move(M), turn left(L) and turn right(R
 
 ## Version 2
 In this version, you can place a robot on a 8x8 board in the Cartesian coordinate systemand and tell it its destination, the robot will tell you all the possible combinations of actions it can move from where it is to the target location within an assigned maximum actions allowed.<br /><br />
-An action that a robot can play includes
+
+An action that a robot will play includes
 - M: move a step forward
 - L: turn left
 - R: turn right
