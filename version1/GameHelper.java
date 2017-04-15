@@ -1,5 +1,13 @@
 import java.io.*;
 
+/**
+ * A GameHelper is willing to facilitate the gaming process, it can ask user
+ * for input, check if robot is going out of board boundary, check if input
+ * of direction is valid and check if all actions in input are valid.
+ *
+ * @author       Wei-Yuan Wen (2017)
+ * @version      1.0
+ */
 public class GameHelper {
 
 	private static final int MINIMUM_LENGTH = 0; 	// minimum length of board

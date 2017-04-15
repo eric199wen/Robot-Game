@@ -3,6 +3,14 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.*;
 
+/**
+ * It's a simple robot game. You can move a robot on a 8x8 board or find all
+ * the actions for a robot to move from original location to a designated
+ * destination within an assigned maximum actions allowed.
+ *
+ * @author       Wei-Yuan Wen (2017)
+ * @version      1.0
+ */
 public class Robot {
 
 	public enum Direction {
@@ -183,7 +191,7 @@ public class Robot {
 
 		// Check if no possible path exists
 		if (this.paths.size() == 0) {
-			System.out.println("No combination of actions can reach"
+			System.out.println("No sequence of actions can reach"
                     + " the target!");
 			return;
 		}
@@ -245,8 +253,8 @@ public class Robot {
 					// Check if direction is valid
 					while (!GameHelper.checkDirection(directionInput)) {
 						// Invalid input, ask user to enter again
-						System.out.println("Invalid direction, just enter W or"
-							+ " E or S or N, please enter again!");
+						System.out.println("Invalid direction, just enter"
+							+ " W, E, S or N, please enter again!");
 						directionInput = GameHelper.getUserInput("Original"
 							+ " direction faced: ");
 					}

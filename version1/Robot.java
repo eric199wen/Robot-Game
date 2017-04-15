@@ -2,6 +2,14 @@ import java.io.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/**
+ * It's a simple robot game. You can move a robot on a 8x8 board or find all
+ * the actions for a robot to move from original location to a designated
+ * destination within an assigned maximum actions allowed.
+ *
+ * @author       Wei-Yuan Wen (2017)
+ * @version      1.0
+ */
 public class Robot {
 
 	public enum Direction {
