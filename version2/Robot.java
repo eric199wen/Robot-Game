@@ -17,9 +17,9 @@ public class Robot {
         N, E, S, W
     }
 
-    private Direction direction;	// the direction robot is facing
-    private int x; 					// the position of robot on axis x
-    private int y;					// the position of robot on axis y
+    private Direction direction;    // the direction robot is facing
+    private int x;                  // the position of robot on axis x
+    private int y;                  // the position of robot on axis y
     // to store all the possible paths
     ArrayList<ArrayList<String>> paths = new ArrayList<ArrayList<String>>();
 
@@ -27,8 +27,8 @@ public class Robot {
      * Create a <code>Robot</code> with initial position on board and the
      * direction it faced.
      *
-     * @param  x 		 position on x axis.
-     * @param  y   		 position on y axis.
+     * @param  x         position on x axis.
+     * @param  y         position on y axis.
      * @param  direction the direction robot face to.
      */
     public Robot(int x, int y, Direction direction) {
@@ -41,7 +41,7 @@ public class Robot {
      * Make a Robot object move a step toward the direction it is facing.
      *
      * @return <code>true</code> if move successfully, othewise return
-     *		   <code>false</code>
+     *         <code>false</code>
      */
     private boolean move() {
         int updatedx = this.x;
@@ -127,12 +127,12 @@ public class Robot {
     /**
      * Make a Robot object turn right.
      *
-     * @param  path 				 the current path that robot object
-     * 								 go through
-     * @param  targetX				 the target of x position
-     * @param  targetY				 the target of y position
-     * @param  targetD				 the target of direction
-     * @param  currentStep			 the number of current step taken
+     * @param  path                  the current path that robot object
+     *                               go through
+     * @param  targetX               the target of x position
+     * @param  targetY               the target of y position
+     * @param  targetD               the target of direction
+     * @param  currentStep           the number of current step taken
      * @param  maximumActionsAllowed the number of maximum action allowed
      */
     private void DFS(ArrayList<String> path, int targetX, int targetY,
@@ -186,7 +186,7 @@ public class Robot {
      */
     private void printPaths() {
 
-        StringBuilder sb = null; 	// to construct printing message
+        StringBuilder sb = null;    // to construct printing message
 
         // Check if no possible path exists
         if (this.paths.size() == 0) {
@@ -217,11 +217,11 @@ public class Robot {
     public static void main(String[] args) {
         // store input parameters
         int originalX, originalY, targetX, targetY, maximumActionsAllowed;
-        Direction originalD, targetD;	// store input directions
-        Robot robot = null;  	// main object to perform actions
+        Direction originalD, targetD;   // store input directions
+        Robot robot = null;             // main object to perform actions
         // store input strings
         String locationInput = null, directionInput = null;
-        String maximumActionsAllowedInput = null;	// store input strings
+        String maximumActionsAllowedInput = null;   // store input strings
 
         // Getting valid input from user
         outer:

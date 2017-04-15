@@ -10,8 +10,8 @@ import java.io.*;
  */
 public class GameHelper {
 
-    private static final int MINIMUM_LENGTH = 0; 	// minimum length of board
-    private static final int MAXIMUM_LENGTH = 9;	// maximum length of board
+    private static final int MINIMUM_LENGTH = 0;    // minimum length of board
+    private static final int MAXIMUM_LENGTH = 9;    // maximum length of board
 
     // a buffer reads input from user
     private static BufferedReader is = new BufferedReader(
@@ -41,7 +41,7 @@ public class GameHelper {
      * @param  x the x position to be checked
      * @param  y the y position to be checked
      * @return <code>true</code> if boundary is valid, <code>fasle</code>
-     *		   if out of boundary
+     *        if out of boundary
      */
     public static boolean checkBoundary(int x, int y) {
         if (x > MINIMUM_LENGTH && x < MAXIMUM_LENGTH &&
@@ -68,7 +68,7 @@ public class GameHelper {
      * Check if all actions in input are valid
      *
      * @param  actionsInput a string to be checked if contained all valid
-     *						action
+     *                      action
      * @return <code>true</code> if valid, otherwise return <code>false</code>
      */
     public static boolean checkActions(String actionsInput) {

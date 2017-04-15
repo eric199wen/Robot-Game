@@ -16,16 +16,16 @@ public class Robot {
         N, E, S, W
     }
 
-    private Direction direction;	// the direction robot is facing
-    private int x; 					// the position of robot on axis x
-    private int y;					// the position of robot on axis y
+    private Direction direction;    // the direction robot is facing
+    private int x;                  // the position of robot on axis x
+    private int y;                  // the position of robot on axis y
 
     /**
      * Create a <code>Robot</code> with initial position on board and the
      * direction it faced.
      *
-     * @param  x 		 position on x axis.
-     * @param  y   		 position on y axis.
+     * @param  x         position on x axis.
+     * @param  y         position on y axis.
      * @param  direction the direction robot face to.
      */
     public Robot(int x, int y, Direction direction) {
@@ -38,7 +38,7 @@ public class Robot {
      * Get the location of a Robot object.
      *
      * @return  <code>String</code> has pattern of [x,y], where x is x
-     *			position and y is y position
+     *          position and y is y position
      */
     public String getLocation() {
         return "[" + String.valueOf(this.x) + "," +
@@ -159,9 +159,9 @@ public class Robot {
 
     public static void main(String[] args) {
 
-        Direction direction;  	// store input direction
-        int x, y;				// store input location
-        Robot robot = null;   	// main object to perform actions
+        Direction direction;    // store input direction
+        int x, y;               // store input location
+        Robot robot = null;     // main object to perform actions
         // store input strings
         String locationInput = null, directionInput = null, actionInput = null;
 
