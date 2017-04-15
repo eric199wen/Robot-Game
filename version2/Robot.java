@@ -1,0 +1,360 @@
+import java.io.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.*;
+
+public class Robot {
+
+	public enum Direction {
+    	N, E, S, W
+	}
+
+	private Direction direction;	// the direction robot is facing
+	private int x; 					// the position of robot on axis x
+	private int y;					// the position of robot on axis y
+	// to store all the possible paths
+	ArrayList<ArrayList<String>> paths = new ArrayList<ArrayList<String>>();
+
+	/**
+     * Create a <code>Robot</code> with initial position on board and the
+     * direction it faced.
+     *
+     * @param  x 		 position on x axis.
+     * @param  y   		 position on y axis.
+     * @param  direction the direction robot face to.
+     */
+	public Robot(int x, int y, Direction direction) {
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+	}
+
+	/**
+     * Make a Robot object move a step toward the direction it is facing.
+     *
+     * @return <code>true</code> if move successfully, othewise return
+     *		   <code>false</code>
+     */
+	private boolean move() {
+		int updatedx = this.x;
+		int updatedy = this.y;
+		switch (this.direction) {
+			case N:
+				// Move one step toward north
+				updatedy = this.y+1;
+				break;
+			case E:
+				// Move one step toward east
+				updatedx = this.x+1;
+				break;
+			case S:
+				// Move one step toward south
+				updatedy = this.y-1;
+				break;
+			case W:
+				// Move one step toward west
+				updatedx = this.x-1;
+				break;
+		}
+
+		// Update position if still in board boundary
+		if (GameHelper.checkBoundary(updatedx, updatedy)) {
+			this.x = updatedx;
+			this.y = updatedy;
+			return true;
+		} else {
+			// Move out of boundary, do nothing
+			return false;
+		}
+	}
+
+	/**
+     * Make a Robot object turn left.
+     */
+	private void turnLeft() {
+		switch (this.direction) {
+			case N:
+				// Turn to face west if faced toward north
+				this.direction = Direction.W;
+				break;
+			case E:
+				// Turn to face north if faced toward east
+				this.direction = Direction.N;
+				break;
+			case S:
+				// Turn to face east if faced toward south
+				this.direction = Direction.E;
+				break;
+			case W:
+				// Turn to face south if faced toward west
+				this.direction = Direction.S;
+				break;
+		}
+	}
+
+	/**
+     * Make a Robot object turn right.
+     */
+	private void turnRight() {
+		switch (this.direction) {
+			case N:
+				// Turn to face east if faced toward north
+				this.direction = Direction.E;
+				break;
+			case E:
+				// Turn to face south if faced toward east
+				this.direction = Direction.S;
+				break;
+			case S:
+				// Turn to face west if faced toward south
+				this.direction = Direction.W;
+				break;
+			case W:
+				// Turn to face north if faced toward west
+				this.direction = Direction.N;
+				break;
+		}
+	}
+
+	/**
+     * Make a Robot object turn right.
+     *
+     * @param  path 				the current path that robot object
+     * 								go through
+     * @param  targetX				the target of x position
+     * @param  targetY				the target of y position
+     * @param  targetD				the target of direction
+     * @param  currentStep			the number of current step taken
+     * @param  maximumActionsAllowed the number of maximum action allowed
+     */
+	private void DFS(ArrayList<String> path, int targetX, int targetY,
+					Direction targetD, int currentStep,
+					int maximumActionsAllowed) {
+
+		// Check if reached target of position and direction
+		if (this.x == targetX && this.y == targetY &&
+			this.direction == targetD)
+			this.paths.add(new ArrayList<String>(path));
+
+		// Check if reached maximum steps
+		if (currentStep == maximumActionsAllowed)
+			return;
+
+		// Turn left and record path, do DFS, then backtrack the state
+        // after DFS is done.
+		turnLeft();
+		path.add("L");
+		DFS(path, targetX, targetY, targetD, currentStep+1,
+			maximumActionsAllowed);
+		path.remove(path.size()-1);
+		turnRight();
+
+		// Turn right and record path, do DFS, then backtrack the state
+        // after DFS is done.
+		turnRight();
+		path.add("R");
+		DFS(path, targetX, targetY, targetD, currentStep+1,
+			maximumActionsAllowed);
+		path.remove(path.size()-1);
+		turnLeft();
+
+		// if move successfully, record path, do DFS, and backtrack the
+        // state after DFS id done.
+		if (move()) {
+			path.add("M");
+			DFS(path, targetX, targetY, targetD, currentStep+1,
+				maximumActionsAllowed);
+			path.remove(path.size()-1);
+			// move backward
+			turnLeft();
+			turnLeft();
+			move();
+			turnLeft();
+			turnLeft();
+		}
+	}
+
+	/**
+     * Print all the possible paths.
+     */
+	private void printPaths() {
+
+		StringBuilder sb = null; 	// to construct printing message
+
+		// Check if no possible path exists
+		if (this.paths.size() == 0) {
+			System.out.println("No combination of actions can reach"
+                    + " the target!");
+			return;
+		}
+
+		// Print each path in possible paths
+		for (int i = 0; i < this.paths.size(); i++) {
+			System.out.print("Actions - " + (i+1) + ": ");
+			sb = new StringBuilder();
+
+			ArrayList<String> path = this.paths.get(i);
+			if (path.size() == 0)
+				sb.append("No action!");
+			if (path.size() >= 1)
+				sb.append(path.get(0));
+			for (int j = 1; j < path.size(); j++) {
+				sb.append(",");
+				sb.append(path.get(j));
+			}
+			System.out.println(sb.toString());
+		}
+		System.out.println("No more possible actions!");
+	}
+
+	public static void main(String[] args) {
+		// store input parameters
+		int originalX, originalY, targetX, targetY, maximumActionsAllowed;
+		Direction originalD, targetD;	// store input directions
+		Robot robot = null;  	// main object to perform actions
+		// store input strings
+		String locationInput = null, directionInput = null;
+		String maximumActionsAllowedInput = null;	// store input strings
+
+		// Getting valid input from user
+		outer:
+		while (true) {
+			locationInput = GameHelper.getUserInput("Original position: ");
+
+			// Check if location is null
+			if (locationInput == null) {
+				System.out.println("Invalid input, please enter again!"
+					+ " (ex: [x,y] (0<x,y<9))");
+				continue;
+			}
+
+			// Check if location is typed in right pattern, i.e. [x,y]
+			Pattern p = Pattern.compile("\\[\\d,\\d\\]");
+			Matcher m1 = p.matcher(locationInput);
+			if (m1.matches()) {
+				originalX
+                    = Character.getNumericValue(locationInput.charAt(1));
+				originalY
+                    = Character.getNumericValue(locationInput.charAt(3));
+
+				// Check if location is valid
+				if (GameHelper.checkBoundary(originalX, originalY)) {
+					directionInput = GameHelper.getUserInput("Original"
+						+ " direction faced: ");
+
+					// Check if direction is valid
+					while (!GameHelper.checkDirection(directionInput)) {
+						// Invalid input, ask user to enter again
+						System.out.println("Invalid direction, just enter W or"
+							+ " E or S or N, please enter again!");
+						directionInput = GameHelper.getUserInput("Original"
+							+ " direction faced: ");
+					}
+					originalD = Direction.valueOf(directionInput);
+
+					// Instantiate a Robot object with valid input
+					robot = new Robot(originalX, originalY, originalD);
+
+					while (true) {
+						locationInput = GameHelper.getUserInput("Target"
+							+ " position: ");
+
+						if (locationInput == null) {
+							// Invalid input, ask user to enter again
+							System.out.println("Invalid input, starting"
+								+ " position [x,y] (0<x,y<9), please enter"
+								+ " again!");
+							continue;
+						}
+
+						m1 = p.matcher(locationInput);
+						if (m1.matches()) {
+							targetX
+								= Character.getNumericValue(locationInput.charAt(1));
+							targetY
+								= Character.getNumericValue(locationInput.charAt(3));
+
+							if (GameHelper.checkBoundary(targetX, targetY)) {
+								directionInput = GameHelper.getUserInput(""
+									+ "Target direction faced: ");
+
+								while (!GameHelper.checkDirection(directionInput)) {
+									// Invalid input, ask user to enter again
+									System.out.println("Invalid direction,"
+										+ " just enter W, E, S or N,"
+										+ " please enter again!");
+									directionInput = GameHelper.getUserInput(""
+										+ "Target direction faced: ");
+								}
+								targetD = Direction.valueOf(directionInput);
+
+								while (true) {
+									maximumActionsAllowedInput
+										= GameHelper.getUserInput("Maximum"
+											+ " actions allowed: ");
+
+									// Check if the number of maximum actions
+									// allowed is null
+									if (maximumActionsAllowedInput == null) {
+										// Invalid input, ask user to enter
+										// again
+										System.out.println("Invalid Input,"
+											+ " maximum actions allowed should"
+											+ " be greater than zero, please"
+											+ " enter again!");
+										continue;
+									}
+
+									maximumActionsAllowed
+										= Integer.parseInt(maximumActionsAllowedInput);
+									// Check if the number of maximum actions
+									// allowed is negative
+									if (maximumActionsAllowed <= 0) {
+										// Invalid input, ask user to enter
+										// again
+										System.out.println("Invalid Input,"
+											+ " maximum actions allowed"
+											+ " should be greater than zero,"
+											+ " please enter again!");
+										continue;
+									}
+									break outer;
+								}
+							} else {
+								// Invalid input, ask user to enter again
+								System.out.println("Input out of range,"
+									+ " please enter again!"
+									+ " (ex: [x,y] (0<x,y<9))");
+								continue;
+							}
+						} else {
+							// Invalid input, ask user to enter again
+							System.out.println("Invalid input, please enter"
+								+ " again! (ex: [x,y] (0<x,y<9))");
+							continue;
+						}
+					}
+				} else {
+					// Invalid input, ask user to enter again
+					System.out.println("Input out of range, please enter"
+						+ " again! (ex: [x,y] (0<x,y<9))");
+					continue;
+				}
+			} else {
+				// Invalid input, ask user to enter again
+				System.out.println("Invalid input, please enter again!"
+					+ " (ex: [x,y] (0<x,y<9)");
+				continue;
+			}
+		}
+
+		// Make robot to do the Depth-First Search
+		robot.DFS(new ArrayList<String>(), targetX, targetY, targetD, 0,
+			maximumActionsAllowed);
+
+		// Print all the possible paths
+		robot.printPaths();
+
+		return;
+	}
+}
