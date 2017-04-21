@@ -39,6 +39,8 @@ public class Robot {
 
     /**
      * Make a Robot object move a step toward the direction it is facing.
+     * If a move make robot go out of board boundary, that move is invalid
+     * and were skipped.
      *
      * @return <code>true</code> if move successfully, othewise return
      *         <code>false</code>
@@ -215,16 +217,17 @@ public class Robot {
     }
 
     public static void main(String[] args) {
-        // store input parameters
-        int originalX, originalY, targetX, targetY, maximumActionsAllowed;
-        Direction originalD, targetD;   // store input directions
-        Robot robot = null;             // main object to perform actions
+
+        int originalX = 0, originalY = 0;   // store original posiiton
+        int targetX = 0, targetY = 0;       // store target position
+        int maximumActionsAllowed = 0;      // store maximum actions allowed
+        Direction originalD, targetD;       // store input directions
+        Robot robot = null;                 // main object to perform actions
         // store input strings
         String locationInput = null, directionInput = null;
         String maximumActionsAllowedInput = null;   // store input strings
 
-        // Getting valid input from user
-        outer:
+        // Getting valid location input from user
         while (true) {
             locationInput = GameHelper.getUserInput("Original position: ");
 
@@ -243,117 +246,75 @@ public class Robot {
                     = Character.getNumericValue(locationInput.charAt(1));
                 originalY
                     = Character.getNumericValue(locationInput.charAt(3));
-
-                // Check if location is valid
-                if (GameHelper.checkBoundary(originalX, originalY)) {
-                    directionInput = GameHelper.getUserInput("Original"
-                        + " direction faced: ");
-
-                    // Check if direction is valid
-                    while (!GameHelper.checkDirection(directionInput)) {
-                        // Invalid input, ask user to enter again
-                        System.out.println("Invalid direction, just enter"
-                            + " W, E, S or N, please enter again!");
-                        directionInput = GameHelper.getUserInput("Original"
-                            + " direction faced: ");
-                    }
-                    originalD = Direction.valueOf(directionInput);
-
-                    // Instantiate a Robot object with valid input
-                    robot = new Robot(originalX, originalY, originalD);
-
-                    while (true) {
-                        locationInput = GameHelper.getUserInput("Target"
-                            + " position: ");
-
-                        if (locationInput == null) {
-                            // Invalid input, ask user to enter again
-                            System.out.println("Invalid input, starting"
-                                + " position [x,y] (0<x,y<9), please enter"
-                                + " again!");
-                            continue;
-                        }
-
-                        m1 = p.matcher(locationInput);
-                        if (m1.matches()) {
-                            targetX
-                                = Character.getNumericValue(locationInput.charAt(1));
-                            targetY
-                                = Character.getNumericValue(locationInput.charAt(3));
-
-                            if (GameHelper.checkBoundary(targetX, targetY)) {
-                                directionInput = GameHelper.getUserInput(""
-                                        + "Target direction faced: ");
-
-                                while (!GameHelper.checkDirection(directionInput)) {
-                                    // Invalid input, ask user to enter again
-                                    System.out.println("Invalid direction,"
-                                        + " just enter W, E, S or N,"
-                                        + " please enter again!");
-                                    directionInput = GameHelper.getUserInput(""
-                                        + "Target direction faced: ");
-                                }
-                                targetD = Direction.valueOf(directionInput);
-
-                                while (true) {
-                                    maximumActionsAllowedInput
-                                        = GameHelper.getUserInput("Maximum"
-                                            + " actions allowed: ");
-
-                                    // Check if the number of maximum actions
-                                    // allowed is null
-                                    if (maximumActionsAllowedInput == null) {
-                                        // Invalid input, ask user to enter
-                                        // again
-                                        System.out.println("Invalid Input,"
-                                            + " maximum actions allowed should"
-                                            + " be greater than zero, please"
-                                            + " enter again!");
-                                        continue;
-                                    }
-
-                                    maximumActionsAllowed
-                                        = Integer.parseInt(maximumActionsAllowedInput);
-                                    // Check if the number of maximum actions
-                                    // allowed is negative
-                                    if (maximumActionsAllowed <= 0) {
-                                        // Invalid input, ask user to enter
-                                        // again
-                                        System.out.println("Invalid Input,"
-                                            + " maximum actions allowed"
-                                            + " should be greater than zero,"
-                                            + " please enter again!");
-                                        continue;
-                                    }
-                                    break outer;
-                                }
-                            } else {
-                                // Invalid input, ask user to enter again
-                                System.out.println("Input out of range,"
-                                    + " please enter again!"
-                                    + " (ex: [x,y] (0<x,y<9))");
-                                continue;
-                            }
-                        } else {
-                            // Invalid input, ask user to enter again
-                            System.out.println("Invalid input, please enter"
-                                + " again! (ex: [x,y] (0<x,y<9))");
-                            continue;
-                        }
-                    }
-                } else {
-                    // Invalid input, ask user to enter again
-                    System.out.println("Input out of range, please enter"
-                        + " again! (ex: [x,y] (0<x,y<9))");
-                    continue;
-                }
             } else {
                 // Invalid input, ask user to enter again
                 System.out.println("Invalid input, please enter again!"
                     + " (ex: [x,y] (0<x,y<9)");
                 continue;
             }
+
+            // Check if location is valid
+            if (!GameHelper.checkBoundary(originalX, originalY)) {
+                // Invalid input, ask user to enter again
+                System.out.println("Input out of range, please enter"
+                    + " again! (ex: [x,y] (0<x,y<9))");
+                continue;
+            }
+
+            break;
         }
+
+        // Get original direction that robot object faced from user
+        directionInput = GameHelper.getDirection("Original direction faced: ");
+        // Convert string to direction
+        originalD = Direction.valueOf(directionInput);
+
+        // Instantiate a Robot object with valid input
+        robot = new Robot(originalX, originalY, originalD);
+
+        while (true) {
+            locationInput = GameHelper.getUserInput("Target position: ");
+
+            // Check if location is null
+            if (locationInput == null) {
+                System.out.println("Invalid input, please enter again!"
+                    + " (ex: [x,y] (0<x,y<9))");
+                continue;
+            }
+
+            // Check if location is typed in right pattern, i.e. [x,y]
+            Pattern p = Pattern.compile("\\[\\d,\\d\\]");
+            Matcher m1 = p.matcher(locationInput);
+            if (m1.matches()) {
+                targetX
+                    = Character.getNumericValue(locationInput.charAt(1));
+                targetY
+                    = Character.getNumericValue(locationInput.charAt(3));
+            } else {
+                // Invalid input, ask user to enter again
+                System.out.println("Invalid input, please enter again!"
+                    + " (ex: [x,y] (0<x,y<9))");
+                continue;
+            }
+
+            // Check if location is valid
+            if (!GameHelper.checkBoundary(targetX, targetY)) {
+                // Invalid input, ask user to enter again
+                System.out.println("Input out of range, please enter"
+                    + " again! (ex: [x,y] (0<x,y<9))");
+                continue;
+            }
+
+            break;
+        }
+
+        // Get target direction that robot object faced from user
+        directionInput = GameHelper.getDirection("Target direction faced: ");
+        // Convert string to direction
+        targetD = Direction.valueOf(directionInput);
+
+        // Get the maximum actions allowed from user
+        maximumActionsAllowed = GameHelper.getMaximumActionsAllowed();
 
         // Make robot to do the Depth-First Search
         robot.DFS(new ArrayList<String>(), targetX, targetY, targetD, 0,

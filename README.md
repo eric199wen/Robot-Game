@@ -5,9 +5,10 @@ It's a simple robot game. You can move a robot on a 8x8 board or find all the ac
 `make clean` will delete all .class files.<br />
 `make` will compile all .java files.<br />
 `make run` will run the robot game.<br />
+`make debug` is for version 1, this command will print the debug messages when executing.<br />
 
 ## Version 1
-In this version, you can place a robot on a 8x8 square board in the Cartesian coordinate system and tell it how you want it to move within the board. Notice that if a move led the robot to go out of the board boundary, that move will simply be skipped. At a boundary, it can only turn left/right.<br /><br />
+In this version, you can place a robot on a 8x8 square board in the Cartesian coordinate system and tell it how you want it to move within the board. Notice that if a move led the robot to go out of the board boundary, that move will simply be ignored. At a boundary, it can only turn left/right.<br /><br />
 An action that a robot can play includes
 - M: move a square forward
 - L: turn left

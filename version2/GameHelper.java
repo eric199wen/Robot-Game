@@ -21,7 +21,7 @@ public class GameHelper {
      * Ask user to type input.
      *
      * @param  prompt the prompt to ask user for input
-     * @return <code>String</code> is the user input
+     * @return <code>String</code> of the user input
      */
     public static String getUserInput (String prompt) {
         String inputLine = null;
@@ -33,6 +33,96 @@ public class GameHelper {
             System.out.println("IOException: " + e);
         }
         return inputLine;
+    }
+
+    /**
+     * Get sequence of actions from user input
+     *
+     * @return <code>String</code> of sequence of actions that robot going
+     *         to take
+     */
+    public static String getActions() {
+        String actions = null;
+
+        actions = getUserInput("Actions: ");
+
+        // Check if actions is valid
+        while (!checkActions(actions)) {
+            // Invalid input, ask user to enter again
+            System.out.println("Invalid input, please enter again!"
+                + " (ex: M,L,R,R,M)");
+            actions = getUserInput("Actions: ");
+        }
+
+        return actions;
+    }
+
+    /**
+     * Get direction that Robot object faced from user input
+     *
+     * @return <code>String</code> of direction that Robot object faced
+     */
+    public static String getDirection(String prompt) {
+        String direction = null;
+
+        direction = getUserInput(prompt);
+
+        // Check if direction is valid
+        while (!GameHelper.checkDirection(direction)) {
+            // Invalid input, ask user to enter again
+            System.out.println("Invalid direction, just enter"
+                + " W, E, S or N, please enter again!");
+            direction = getUserInput(prompt);
+        }
+
+        return direction;
+    }
+
+    /**
+     * Get maximum actions allowed from user input
+     *
+     * @return <code>int</code> maximum actions allowed
+     */
+    public static int getMaximumActionsAllowed() {
+        String maximumActionsAllowedInput = null;
+        int maximumActionsAllowed = 0;
+
+        outer:
+        while (true) {
+            maximumActionsAllowedInput = getUserInput("Maximum"
+                + " actions allowed: ");
+
+            // Check if the number of maximum actions allowed is null
+            if (maximumActionsAllowedInput == null) {
+                // Invalid input, ask user to enter again
+                System.out.println("Invalid Input, maximum actions allowed"
+                    + " should be greater than zero, please enter again!");
+                continue;
+            }
+
+            for (int i = 0; i < maximumActionsAllowedInput.length(); i++) {
+                if (maximumActionsAllowedInput.charAt(i) < '0'
+                    || maximumActionsAllowedInput.charAt(i) > '9') {
+                    // Invalid input, ask user to enter again
+                    System.out.println("Invalid Input, maximum actions allowed"
+                        + " should be greater than zero, please enter again!");
+                    continue outer;
+                }
+            }
+
+            maximumActionsAllowed
+                = Integer.parseInt(maximumActionsAllowedInput);
+
+            if (maximumActionsAllowed <= 0) {
+                System.out.println("Invalid Input, maximum actions allowed"
+                    + " should be greater than zero, please enter again!");
+                continue;
+            }
+
+            break;
+        }
+
+        return maximumActionsAllowed;
     }
 
     /**
